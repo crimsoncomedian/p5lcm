@@ -1,55 +1,25 @@
 let input1, input2, calculateButton;
 let lcm = null;
+let multiples1 = [];
+let multiples2 = [];
+let isCalculating = false;
+let resultNum1 = '', resultNum2 = '';
 
 function setup() {
-  createCanvas(600, 780);
-  background(240);
+  noCanvas();
   
-  // Create input 1
-  input1 = createInput('');
-  input1.position(40, 230);
-  input1.size(250, 25);
+  input1 = select('#input1');
+  input2 = select('#input2');
+  calculateButton = select('button');
+
   input1.input(validateInput);
-  input1.attribute('placeholder', 'First number');
-  styleInput(input1);
-  
-  // Create input 2
-  input2 = createInput('');
-  input2.position(310, 230);
-  input2.size(250, 25);
   input2.input(validateInput);
-  input2.attribute('placeholder', 'Second number');
-  styleInput(input2);
-  
-  // Create a button to calculate LCM
-  calculateButton = createButton('Find LCM');
-  calculateButton.position(40, 305);
-  calculateButton.size(520, 40);
+
   calculateButton.mousePressed(calculateLCM);
-  calculateButton.style('background-color', '#071838');
-  calculateButton.style('color', 'white');
-  calculateButton.style('border', 'none');
-  calculateButton.style('border-radius', '5px');
-  calculateButton.style('cursor', 'pointer');
-  calculateButton.style('font-size', '16px');
-  calculateButton.style('font-weight', 'bold');
 }
 
 function draw() {
-  background(240); // Clear the background
-  fill(50);
-  textSize(32);
-  text('LCM Explorer', 100, 100);  // Text at the top
-  
-  fill(0);
-  textSize(16);
-  text('Enter two numbers to find the LCM', 100, 180);  // Text just above inputs
-
-  if (lcm !== null) {
-    fill('#047857');
-    textSize(18);
-    text(`LCM: ${lcm}`, 100, 400);  // Display the LCM result
-  }
+  // No need for continuous rendering
 }
 
 function validateInput() {
@@ -64,29 +34,50 @@ function validateInput() {
 }
 
 function calculateLCM() {
-  const num1 = int(input1.value());
-  const num2 = int(input2.value());
+  const a = int(input1.value());
+  const b = int(input2.value());
+  const errorMessage = select('#error-message');
+  const resultsArea = select('#results-area');
 
-  if (num1 > 0 && num2 > 0) {
-    lcm = calculateLCMHelper(num1, num2);
+  if (isNaN(a) || isNaN(b) || a < 1 || b < 1 || a > 100 || b > 100) {
+    errorMessage.html("Please enter valid numbers between 1 and 100.");
+    resultsArea.style('display', 'none');
+    return;
   }
+
+  errorMessage.html("");
+
+  const gcd = (x, y) => {
+    while(y) {
+      let t = y;
+      y = x % y;
+      x = t;
+    }
+    return x;
+  };
+
+  lcm = abs(a * b) / gcd(a, b);
+
+  select('#result').html(`
+    <div class="result-header">Result:</div>
+    <div class="result-content">LCM of ${a} and ${b} is <strong>${lcm}</strong></div>
+  `);
+
+  displayMultiples(a, b, lcm);
+  resultsArea.style('display', 'block');
 }
 
-function calculateLCMHelper(a, b) {
-  return (a * b) / gcd(a, b);
-}
-
-function gcd(x, y) {
-  while (y !== 0) {
-    let temp = y;
-    y = x % y;
-    x = temp;
+function displayMultiples(a, b, lcm) {
+  let multiples1 = [];
+  let multiples2 = [];
+  for (let i = 1; i <= lcm; i++) {
+    if (i % a === 0) multiples1.push(i);
+    if (i % b === 0) multiples2.push(i);
   }
-  return x;
-}
 
-function styleInput(input) {
-  input.style('border', '1px solid #93c5fd');
-  input.style('border-radius', '5px');
-  input.style('padding', '5px');
-}
+  select('#multiples1').html(`
+    <h3>Multiples of ${a}:</h3>
+    <div class="multiples-list">${formatMultiples(multiples1)}</div>
+  `);
+  select('#multiples2').html(`
+    <h3>Multiples of ${b
