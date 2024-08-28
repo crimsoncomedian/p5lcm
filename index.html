@@ -3,10 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LCM Explorer with p5.js</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
-    <script src="sketch.js"></script>
+    <title>LCM Explorer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #wrapper {
+            width: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #container {
+            width: 100%;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+        .header {
+            background-color: #e0f2fe;
+            padding: 15px 20px;
+            border-radius: 8px 8px 0 0;
+            margin: -20px -20px 20px -20px;
+            text-align: left;
+        }
+        h1 {
+            color: #075985;
+            margin: 0 0 5px 0;
+        }
+        .subtitle {
+            color: #075985;
+            margin: 0;
+        }
+        .definition-box {
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .definition-box h3 {
+            color: #1e40af;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .definition-box p {
+            color: #3b82f6;
+            margin: 0;
+            font-size: 14px;
+        }
+        .input-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        input {
+            width: calc(50% - 5px);
+            padding: 10px;
+            border: 1px solid #93c5fd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .input-hint {
+            color: #6b7280;
+            font-size: 12px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #071838;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        #results-area {
+            display: none;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ecfdf5;
+            border: 1px solid #86efac;
+            border-radius: 5px;
+            font-size: 18px;
+            margin-bottom: 25px;
+        }
+        .result-header {
+            color: #047857;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .result-content {
+            color: #059669;
+        }
+        .multiples-container {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .multiples {
+            width: 100%;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .multiples h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        .multiples-list {
+            padding: 15px;
+            border-radius: 5px;
+        }
+        #multiples1 h3 {
+            color: #7c3aed;
+        }
+        #multiples2 h3 {
+            color: #db2777;
+        }
+        #multiples1 .multiples-list {
+            background-color: #f3e8ff;
+        }
+        #multiples2 .multiples-list {
+            background-color: #fce7f3;
+        }
+        .lcm-highlight {
+            color: #16A34A;
+            font-weight: bold;
+        }
+        #info-text {
+            text-align: center;
+            color: #4b5563;
+            font-size: 14px;
+            line-height: 1.5;
+            padding: 0 20px;
+        }
+        #error-message {
+            color: #ef4444;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
+    <div id="wrapper">
+        <div id="container">
+            <div class="header">
+                <h1>LCM Explorer</h1>
+                <p class="subtitle">Discover the Lowest Common Multiple!</p>
+            </div>
+            <div class="definition-box">
+                <h3>What is the Lowest Common Multiple (LCM)?</h3>
+                <p>The LCM of two or more numbers is the smallest positive number that is divisible by all of them. It's like finding the smallest jump that lands on all the numbers at once!</p>
+            </div>
+            <div class="input-container">
+                <input type="number" id="input1" placeholder="First number" min="1" max="100">
+                <input type="number" id="input2" placeholder="Second number" min="1" max="100">
+            </div>
+            <div class="input-hint">Enter numbers between 1 and 100</div>
+            <button onclick="calculateLCM()">Find LCM</button>
+            <div id="error-message"></div>
+            <div id="results-area">
+                <div id="result"></div>
+                <div class="multiples-container">
+                    <div id="multiples1" class="multiples"></div>
+                    <div id="multiples2" class="multiples"></div>
+                </div>
+            </div>
+        </div>
+        <div id="info-text">
+            LCM is used in real life for things like finding when two events will occur together again, or calculating the smallest box size that can fit different item quantities perfectly!
+        </div>
+    </div>
+    <script src="sketch.js"></script>
 </body>
 </html>
