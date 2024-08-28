@@ -1,4 +1,5 @@
 let input1, input2, calculateButton;
+let lcm = null;
 
 function setup() {
   createCanvas(600, 780);
@@ -35,6 +36,7 @@ function setup() {
 }
 
 function draw() {
+  background(240); // Clear the background
   fill(50);
   textSize(32);
   text('LCM Explorer', 100, 100);  // Text at the top
@@ -42,6 +44,12 @@ function draw() {
   fill(0);
   textSize(16);
   text('Enter two numbers to find the LCM', 100, 180);  // Text just above inputs
+
+  if (lcm !== null) {
+    fill('#047857');
+    textSize(18);
+    text(`LCM: ${lcm}`, 100, 400);  // Display the LCM result
+  }
 }
 
 function validateInput() {
@@ -56,8 +64,25 @@ function validateInput() {
 }
 
 function calculateLCM() {
-  console.log("Calculate LCM button pressed");
-  // Further implementation to calculate and display the LCM
+  const num1 = int(input1.value());
+  const num2 = int(input2.value());
+
+  if (num1 > 0 && num2 > 0) {
+    lcm = calculateLCMHelper(num1, num2);
+  }
+}
+
+function calculateLCMHelper(a, b) {
+  return (a * b) / gcd(a, b);
+}
+
+function gcd(x, y) {
+  while (y !== 0) {
+    let temp = y;
+    y = x % y;
+    x = temp;
+  }
+  return x;
 }
 
 function styleInput(input) {
